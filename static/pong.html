@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <title>Pong</title>
+
+    <script type="text/javascript" src="https://rawcdn.githack.com/colyseus/colyseus.js/b769c403be25dcb52bac71d3fb9f45c9f7ac556e/dist/colyseus.js"></script>
+
+    <style type="text/css">
+        .player {
+          width: 100px;
+          height: 100px;
+          position: absolute;
+          padding-top: 24px;
+          box-sizing: border-box;
+          left: 0;
+          top: 0;
+        }
+
+        canvas {
+            border: solid 1px #fff;
+            border-left: none;
+            border-right: none;
+            image-rendering: pixelated;
+            width: 100%;
+        }
+      </style>
+
+</head>
+
+<body>
+    <canvas id="pong" width="600" height="400" />
+    <script src="../js/pong-client.js"></script>
+</body>
+
+</html>

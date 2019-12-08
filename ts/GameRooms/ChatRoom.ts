@@ -22,7 +22,7 @@ class State extends Schema {
   @type({ map: Player }) players: MapSchema;
 }
 
-export class PongRoom extends Room {
+export class ChatRoom extends Room {
 
   onCreate (options: any) {
     this.setState(new State());

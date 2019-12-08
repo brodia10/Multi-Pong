@@ -7,7 +7,8 @@ import { Server } from "colyseus";
 import { monitor } from "@colyseus/monitor";
 import socialRoutes from "@colyseus/social/express"
 
-import { PongRoom } from "./ts/game_rooms/ChatRoom";
+import { ChatRoom } from "./ts/GameRooms/ChatRoom";
+import { PongRoom } from './ts/GameRooms/Pong/PongRoom';
 
 const port = Number(process.env.PORT || 2567);
 const app = express()
@@ -21,7 +22,8 @@ const gameServer = new Server({
 });
 
 // register your room handlers
-gameServer.define('chat', PongRoom);
+gameServer.define('chat', ChatRoom);
+gameServer.define('pong', PongRoom);
 
 // TODO: This only works if we have DB setup
 // register @colyseus/social routes
