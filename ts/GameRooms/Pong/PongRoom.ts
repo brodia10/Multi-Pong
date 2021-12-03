@@ -148,9 +148,9 @@ export class PongGame extends Schema {
         let ball = new Ball;
         ball.pos.x = this.board.x / 2;
         ball.pos.y = this.board.y / 2;
-        ball.vel.x = 500 * (Math.random() > .5 ? 1 : -1);
-        ball.vel.y = 500 * (Math.random() * 2 - 1);
-        ball.vel.len = 200;
+        ball.vel.x = Math.random() > .5 ? 1 : -1;
+        ball.vel.y = Math.random() * 2 - 1;
+        ball.vel.len = this.options.initialBallSpeed;
         this.balls.push(ball);
     }
 

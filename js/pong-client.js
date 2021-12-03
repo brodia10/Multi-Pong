@@ -146,8 +146,8 @@ class Pong {
     update(newState) {
         this.players = newState.players.map(p => new Player(p));
         this.balls = newState.balls.map(b => new Ball(b));
-        if (this.players.length > 1)
-            console.log(this.players[1].pos);
+        // if (this.players.length > 1)
+            // console.log(this.players[1].pos);
         this.draw();
     }
 }
