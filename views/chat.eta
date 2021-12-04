@@ -2,13 +2,13 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width" />
-
+    <title><%= it.title %></title>
     <style>
       body {
         font-family: Tahoma, Geneva, sans-serif;
         text-align: center;
         align-content: center;
-        background-image: url(assets/tv-background.jpg);
+        background-image: url(static/assets/tv-background.jpg);
         background-size: 100%
       }
       .main-content {
@@ -40,8 +40,7 @@
         Multi-Pong
       </h1>
 
-      <p>Talk about how excited you are for this to be here!</p>
-
+      <p><%= it.welcomeMessage %></p>
 
       <strong>Messages</strong><br>
 
@@ -53,6 +52,6 @@
       <div id="messages"></div>
     </div>
 
-    <script src="/js/chat.js"></script>
+    <script src="static/js/chat.js"></script>
   </body>
 </html>

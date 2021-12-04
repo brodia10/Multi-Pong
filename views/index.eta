@@ -31,7 +31,7 @@
           Create New Room +</i>
         </button> -->
 
-        <a href="/pong.html" type="button" class="btn btn-primary">
+        <a href="/play" type="button" class="btn btn-primary">
           START PLAYING NOW!!!</i>
         </a>
       </h2>
@@ -99,6 +99,7 @@
 
   <!-- Display current game rooms in table -->
   <div class="container mb-3 mt-3">
+    <h2><b>Attention!</b> This is still <i>pre-Beta</i>, most functionality is not implemented yet.</h2>
     <table class="table table-striped table-bordered table-dark mydatatable" style="width: 100%;">
       <thead class="thead-light">
         <tr>
