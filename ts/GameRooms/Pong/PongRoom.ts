@@ -6,10 +6,14 @@ import { Vec } from "../../models/Vec";
 import { Rect } from "../../models/Rect";
 import { Options } from "../../models/Options";
 
+
+const PLAYER_WIDTH = 20
+const PLAYER_HEIGHT = 100
+
 export class Player extends Rect {
 
     constructor(id: string, playerNumber: number) {
-        super(20, 100);
+        super(PLAYER_WIDTH, PLAYER_HEIGHT);
         this.id = id;
         this.playerNumber = playerNumber;
         this.score = 0;
@@ -69,7 +73,6 @@ export class PongGame extends Schema {
 
         this.options = options;
         this.board = new Vec(1000, 700);
-        this.players.push(new ElasticPlayer());
     }
 
     @type([ Player ])
@@ -91,7 +94,7 @@ export class PongGame extends Schema {
     started: boolean = false;
 
     addPlayer (id: string) {
-        this.players.push(new Player(id, this.players.length));
+        this.players.push(new Player(id, this.players.length + 1));
     }
 
     removePlayer (id: string) {
@@ -103,11 +106,11 @@ export class PongGame extends Schema {
     }
 
     get player1 () {
-        return this.players.find(player => player.playerNumber == 0);
+        return this.players.find(player => player.playerNumber == 1);
     }
 
     get player2 () {
-        return this.players.find(player => player.playerNumber == 1);
+        return this.players.find(player => player.playerNumber == 2);
     }
 
     movePlayer (id: string, position: any) {
@@ -136,6 +139,13 @@ export class PongGame extends Schema {
         })
     }
 
+    start() {
+        this.resetBalls();
+        this.resetPlayers();
+        this.addRandomBall();
+        this.started = true;
+    }
+
     update(millis: number) {
         let dt = millis / 1000;
 
@@ -144,13 +154,41 @@ export class PongGame extends Schema {
         this.players.filter(p => p.id == "ai").forEach(p => p.update(this.balls, dt))
     }
 
-    addBall() {
+    addRandomBall() {
         let ball = new Ball;
         ball.pos.x = this.board.x / 2;
         ball.pos.y = this.board.y / 2;
         ball.vel.x = Math.random() > .5 ? 1 : -1;
         ball.vel.y = Math.random() * 2 - 1;
         ball.vel.len = this.options.initialBallSpeed;
+        let ballIdx = this.balls.push(ball);
+        console.log(`Ball ${ballIdx} added`);
+    }
+
+    shootBall(playerId: string) {
+        let player = this.getPlayer(playerId);
+        if (!player) {
+            return;
+        }
+
+        let delta = 10;
+
+        let ball = new Ball;
+        ball.pos.y = (player.top + player.bottom) / 2.0;
+        ball.vel.y = 0.1 * this.options.initialBallSpeed*(Math.random() * 2 - 1); // Some random y-velocity
+
+        // Player one is on left (shoot right)
+        if (player.playerNumber === 1) {
+            ball.vel.x = this.options.initialBallSpeed;
+            ball.pos.x = player.right + delta;
+        }
+
+        // player two on right (shoot left)
+        if (player.playerNumber === 2) {
+            ball.vel.x = -this.options.initialBallSpeed;
+            ball.pos.x = player.left - delta;
+        }
+
         this.balls.push(ball);
     }
 
@@ -199,7 +237,7 @@ export class PongGame extends Schema {
 }
 
 export class PongRoom extends Room<PongGame> {
-    maxClients = 1;
+    maxClients = 2;
 
     onCreate () {
         console.log("Game room created!");
@@ -211,6 +249,12 @@ export class PongRoom extends Room<PongGame> {
     onJoin (client: Client) {
         console.log("Player joined:", client.sessionId)
         this.state.addPlayer(client.sessionId);
+
+        // Start game if not started
+        if (this.state.players.length == 2 && !this.state.started) {
+            this.state.start()
+            this.setSimulationInterval((dt) => this.state.update(dt));
+        }
     }
 
     onLeave (client: Client) {
@@ -226,18 +270,13 @@ export class PongRoom extends Room<PongGame> {
         else if (data.type == "move")
             this.state.movePlayer(client.sessionId, data);
         else if (data.type == "click")
-            this.handleClick();
+            this.handleClick(client.sessionId);
     }
 
-    private handleClick() {
-        if (this.state.players.length == 2 && !this.state.started) {
-            this.state.resetBalls();
-            this.state.resetPlayers();
-            this.setSimulationInterval((deltaTime) => this.state.update(deltaTime));
-            this.state.started = true;
+    private handleClick(playerId: string) {
+        if (this.state.started) {
+            this.state.shootBall(playerId);
         }
-
-        this.state.addBall();
     }
 
     onDispose () {
