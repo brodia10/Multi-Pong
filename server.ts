@@ -32,7 +32,6 @@ gameServer.define('pong', PongRoom);
 // For serving the html docs for the rooms
 app.use('/', express.static(path.join(__dirname, "static")));
 app.use('/', serveIndex(path.join(__dirname, "static"), {'icons': true}))
-
 app.use('/js', express.static(path.join(__dirname, "js")));
 
 // register colyseus monitor AFTER registering your room handlers
