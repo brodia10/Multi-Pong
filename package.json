@@ -2,7 +2,6 @@
   "name": "pong",
   "version": "1.0.0",
   "description": "npm init template for bootstraping an empty Colyseus project",
-  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node server.ts",
     "start": "pwd && node dist/server.js",
