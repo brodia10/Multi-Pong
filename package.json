@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon server.ts",
     "start": "node dist/server.js",
-    "postinstall": "tsc && cp -r static dist/ && cp -r js dist/",
+    "postinstall": "tsc && cp -r static dist/",
     "loadtest": "colyseus-loadtest loadtest/example.ts --room chat --numClients 2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -31,6 +31,7 @@
     "@types/serve-index": "^1.7.30",
     "colyseus": "^0.11.0",
     "cors": "^2.8.5",
+    "eta": "^1.12.3",
     "express": "^4.16.4",
     "express-basic-auth": "^1.2.0",
     "express-jwt": "^6.0.0",
