@@ -5,7 +5,7 @@ import express from "express";
 import cors from "cors";
 import { Server } from "colyseus";
 import { monitor } from "@colyseus/monitor";
-import socialRoutes from "@colyseus/social/express"
+// import socialRoutes from "@colyseus/social/express"
 
 import { ChatRoom } from "./ts/GameRooms/ChatRoom";
 import { PongRoom } from './ts/GameRooms/Pong/PongRoom';

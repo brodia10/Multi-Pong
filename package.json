@@ -2,11 +2,10 @@
   "name": "pong",
   "version": "1.0.0",
   "description": "npm init template for bootstraping an empty Colyseus project",
-  "main": "lib/index.js",
   "scripts": {
     "dev": "ts-node server.ts",
-    "start": "node dist/index.js",
-    "postinstall": "tsc && mv -i -v static dist/ && mv -i -v js dist/ && rm -v -rf ts js static",
+    "start": "pwd && node dist/server.js",
+    "postinstall": "tsc && cp -r static dist/ && cp -r js dist/ && rm -v -rf ts js static",
     "loadtest": "colyseus-loadtest loadtest/example.ts --room chat --numClients 2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,7 +27,6 @@
   },
   "dependencies": {
     "@colyseus/monitor": "^0.11.0",
-    "@colyseus/social": "^0.10.2",
     "@types/serve-index": "^1.7.30",
     "colyseus": "^0.11.0",
     "cors": "^2.8.5",
