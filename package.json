@@ -28,9 +28,6 @@
   "dependencies": {
     "@colyseus/monitor": "^0.11.0",
     "@colyseus/social": "^0.10.2",
-    "@types/express-jwt": "^6.0.2",
-    "@types/mongodb": "^4.0.7",
-    "@types/mongoose": "^5.11.97",
     "@types/serve-index": "^1.7.30",
     "colyseus": "^0.11.0",
     "cors": "^2.8.5",
