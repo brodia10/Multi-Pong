@@ -5,8 +5,8 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node server.ts",
-    "start": "node dist/server.js",
-    "build": "tsc && mv -i -v static dist/ && mv -i -v js dist/",
+    "start": "pwd && node dist/server.js",
+    "build": "tsc && cp -r static dist/ && cp -r js dist/",
     "heroku-postbuild": "rm -v -rf ts js static",
     "loadtest": "colyseus-loadtest loadtest/example.ts --room chat --numClients 2",
     "test": "echo \"Error: no test specified\" && exit 1"
