@@ -2,10 +2,10 @@
   "name": "pong",
   "version": "1.0.0",
   "description": "npm init template for bootstraping an empty Colyseus project",
-  "main": "lib/index.js",
+  "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node server.ts",
-    "start": "cd dist && node index.js",
+    "start": "node dist/server.js",
     "build": "tsc && mv -i -v static dist/ && mv -i -v js dist/",
     "heroku-postbuild": "rm -v -rf ts js static",
     "loadtest": "colyseus-loadtest loadtest/example.ts --room chat --numClients 2",
