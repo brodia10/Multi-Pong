@@ -12,11 +12,11 @@ client.joinOrCreate("pong").then(room_instance => {
     room.onStateChange((state) => pong.update(state));
 
     canvas.addEventListener('mousemove', event => {
-        room.send({ type: "move", y: event.pageY });
+        room.send("move", { y: event.pageY });
     });
 
     canvas.addEventListener('click', event => {
-        room.send({ type: "click" })
+        room.send("click");
     });
 });
 

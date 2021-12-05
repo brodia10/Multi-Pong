@@ -33,7 +33,6 @@ app.use('/', ApplicationRoutes);
 
 const gameServer = new Server({
   server: http.createServer(app),
-  express: app,
 });
 
 // Register your Colyseus room handlers
@@ -44,7 +43,7 @@ gameServer.define('pong', PongRoom);
 app.use(
   "/colyseus",
   basicAuth({ users: { 'admin': ADMIN_PASSWORD }, challenge: true, realm: "multi-pong-server" }),
-  monitor(gameServer)
+  monitor(),
 );
 
 gameServer.onShutdown(function(){

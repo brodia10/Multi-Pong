@@ -49,7 +49,7 @@ export class ElasticPlayer extends Player {
         let minDy = 1000000;
         let update = false
 
-        balls.filter(b => b.vel.x < 0).forEach(ball => {
+        balls.filter(b => b.vel.x < 0).forEach((ball: Ball) => {
             update = true;
             let dx = ball.pos.x - this.pos.x;
             let dy = ball.pos.y - this.pos.y;
@@ -151,7 +151,7 @@ export class PongGame extends Schema {
 
         this.updateBalls(dt);
         this.players.forEach(player => this.collideBalls(player));
-        this.players.filter(p => p.id == "ai").forEach(p => p.update(this.balls, dt))
+        this.players.filter(p => p.id == "ai").forEach((p: Player) => p.update(this.balls, dt));
     }
 
     addRandomBall() {
@@ -244,6 +244,16 @@ export class PongRoom extends Room<PongGame> {
 
         var options = new Options()
         this.setState(new PongGame(options));
+
+        this.onMessage("move", (client, data) => {
+            this.state.movePlayer(client.sessionId, data);
+        });
+
+        this.onMessage("click", (client, data) => {
+            if (this.state.started) {
+                this.state.shootBall(client.sessionId);
+            }
+        });
     }
 
     onJoin (client: Client) {
@@ -260,23 +270,6 @@ export class PongRoom extends Room<PongGame> {
     onLeave (client: Client) {
         console.log("Player left:", client.sessionId);
         this.state.removePlayer(client.sessionId);
-    }
-
-    onMessage (client: Client, data: any) {
-        if (!data.type) { // bad message
-            console.log("Bad Message Recieved:", data);
-            return;
-        }
-        else if (data.type == "move")
-            this.state.movePlayer(client.sessionId, data);
-        else if (data.type == "click")
-            this.handleClick(client.sessionId);
-    }
-
-    private handleClick(playerId: string) {
-        if (this.state.started) {
-            this.state.shootBall(playerId);
-        }
     }
 
     onDispose () {

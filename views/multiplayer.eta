@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="static/assets/style.css">
     <title><%= it.title %></title>
 
-    <script type="text/javascript" src="https://rawcdn.githack.com/colyseus/colyseus.js/b769c403be25dcb52bac71d3fb9f45c9f7ac556e/dist/colyseus.js"></script>
+    <script src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
 
     <style type="text/css">
         .player {

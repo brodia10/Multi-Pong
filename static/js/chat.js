@@ -14,7 +14,7 @@ client.joinOrCreate("chat").then(room => {
     });
 
     // listen to patches coming from the server
-    room.onMessage(function (message) {
+    room.onMessage("message", function (message) {
         var m = document.createElement("div");
         m.innerHTML = message;
         m.classList = "message";
@@ -27,7 +27,7 @@ client.joinOrCreate("chat").then(room => {
         var input = document.querySelector("#input");
         console.log("input:", input.value);
         // send data to room
-        room.send({ message: input.value });
+        room.send("message", { message: input.value });
         // clear input
         input.value = "";
     }
