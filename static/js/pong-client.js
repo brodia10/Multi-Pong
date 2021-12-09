@@ -9,16 +9,15 @@ client.joinOrCreate("pong").then(room_instance => {
     room = room_instance;
     var pong = new Pong(canvas);
 
+    // Update the game state anytime server sends updates
     room.onStateChange((state) => pong.update(state));
 
-    canvas.addEventListener('mousemove', event => {
-        // Send normalized Y-position
-        room.send("move", { y: event.pageY / window.innerHeight });
-    });
+    // Send normalized Y-position
+    canvas.addEventListener('mousemove', event => room.send("move", { y: event.pageY / window.innerHeight }));
 
-    canvas.addEventListener('click', event => {
-        room.send("click");
-    });
+    // Send "click" message on mouse click and "f" key press
+    canvas.addEventListener('click', event => room.send("click"));
+    window.addEventListener("keypress", event => event.code === "KeyF" ? room.send("click") : null);
 
     // Re-draw game if window is resized.
     window.addEventListener('resize', () => pong.draw(), false);
