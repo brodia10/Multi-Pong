@@ -10,8 +10,14 @@ export class Options extends Schema {
     initialBallSpeed: number = 250;
 
     @type("string")
-    mode: string = "single-ball"; // "multi-ball"
+    mode: string = "multi-ball | single-ball";
 
     @type("number")
     pointsToWin: number = 15;
+
+    @type("number")
+    paddleWidth: number = 20;
+
+    @type("number")
+    paddleHeight: number = 100;
 }

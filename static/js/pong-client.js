@@ -12,20 +12,24 @@ client.joinOrCreate("pong").then(room_instance => {
     room.onStateChange((state) => pong.update(state));
 
     canvas.addEventListener('mousemove', event => {
-        room.send("move", { y: event.pageY });
+        // Send normalized Y-position
+        room.send("move", { y: event.pageY / window.innerHeight });
     });
 
     canvas.addEventListener('click', event => {
         room.send("click");
     });
+
+    // Re-draw game if window is resized.
+    window.addEventListener('resize', () => pong.draw(), false);
 });
 
 
 //Create reusable vector
 class Vec {
     constructor(x = 0, y = 0) {
-        this.x = x;
-        this.y = y;
+        this.x = Number(x);
+        this.y = Number(y);
     }
     get len() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -34,6 +38,12 @@ class Vec {
         const fact = value / this.len;
         this.x *= fact;
         this.y *= fact;
+    }
+
+    scale(x, y) {
+        this.x *= x;
+        this.y *= y;
+        return this;
     }
 }
 //Create rectangle
@@ -54,20 +64,33 @@ class Rect {
     get bottom() {
         return this.pos.y + this.size.y / 2;
     }
+
+    scale(x, y) {
+        this.pos.scale(x, y);
+        this.size.scale(x, y);
+        return this;
+    }
 }
 //Create ball
 class Ball extends Rect {
     constructor(ball) {
         super(ball.size.x, ball.size.y);
-        this.pos = ball.pos;
-        this.vel = ball.vel;
+        this.pos = new Vec(ball.pos.x, ball.pos.y);
+        this.vel = new Vec(ball.vel.x, ball.vel.y);
+    }
+
+    scale(x, y) {
+        this.pos.scale(x, y);
+        this.vel.scale(x, y);
+        this.size.scale(x, y);
+        return this;
     }
 }
 
 class Player extends Rect {
     constructor(player) {
         super(player.size.x, player.size.y);
-        this.pos = player.pos;
+        this.pos = new Vec(player.pos.x, player.pos.y);
         this.score = player.score;
     }
 }
@@ -115,6 +138,9 @@ class Pong {
     }
 
     draw() {
+        this._canvas.width = window.innerWidth;
+        this._canvas.height = window.innerHeight;
+
         this._context.fillStyle = '#000';
         this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
         this.balls.forEach(ball => this.drawRect(ball));
@@ -142,10 +168,17 @@ class Pong {
         });
     }
 
-    //Update ball position
-    update(newState) {
-        this.players = newState.players.map(p => new Player(p));
-        this.balls = newState.balls.map(b => new Ball(b));
+    // Update ball and player positions
+    update(newState = null) {
+        // Scale factors to convert server positions to local
+        // client positions depend on window dimenions and the
+        // actual game board size.
+        const xfactor = window.innerWidth / newState.board.x;
+        const yfactor = window.innerHeight / newState.board.y;
+
+        // Convert to local (scaled) players and balls
+        this.players = newState.players.map(p => (new Player(p)).scale(xfactor, yfactor));
+        this.balls = newState.balls.map(b => (new Ball(b)).scale(xfactor, yfactor));
         // if (this.players.length > 1)
             // console.log(this.players[1].pos);
         this.draw();

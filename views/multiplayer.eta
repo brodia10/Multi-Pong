@@ -5,22 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" type="text/css" href="static/assets/style.css">
     <title><%= it.title %></title>
 
     <script src="https://unpkg.com/colyseus.js@^0.14.0/dist/colyseus.js"></script>
 
     <style type="text/css">
-        .player {
-          width: 100px;
-          height: 100px;
-          position: absolute;
-          padding-top: 24px;
-          box-sizing: border-box;
-          left: 0;
-          top: 0;
-        }
-
         canvas {
             border: solid 1px #fff;
             border-left: none;
@@ -33,7 +22,7 @@
 </head>
 
 <body>
-    <canvas id="pong" width="1000" height="700" />
+    <canvas id="pong" />
     <script src="static/js/pong-client.js"></script>
 </body>
 

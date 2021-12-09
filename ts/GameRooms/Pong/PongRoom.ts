@@ -7,13 +7,10 @@ import { Rect } from "../../models/Rect";
 import { Options } from "../../models/Options";
 
 
-const PLAYER_WIDTH = 20
-const PLAYER_HEIGHT = 100
-
 export class Player extends Rect {
 
-    constructor(id: string, playerNumber: number) {
-        super(PLAYER_WIDTH, PLAYER_HEIGHT);
+    constructor(id: string, playerNumber: number, width: number, height: number) {
+        super(width, height);
         this.id = id;
         this.playerNumber = playerNumber;
         this.score = 0;
@@ -35,8 +32,8 @@ export class Player extends Rect {
 
 
 export class ElasticPlayer extends Player {
-    constructor(speed = 6.0) {
-        super("ai", 0);
+    constructor(width: number, height: number, speed = 6.0) {
+        super("ai", 0, width, height);
         this.speed = speed;
     }
 
@@ -94,7 +91,13 @@ export class PongGame extends Schema {
     started: boolean = false;
 
     addPlayer (id: string) {
-        this.players.push(new Player(id, this.players.length + 1));
+        this.players.push(new Player(
+            id,
+            this.players.length + 1,
+            this.options.paddleWidth,
+            this.options.paddleHeight
+        ));
+        this.resetPlayers();
     }
 
     removePlayer (id: string) {
@@ -113,7 +116,7 @@ export class PongGame extends Schema {
         return this.players.find(player => player.playerNumber == 2);
     }
 
-    movePlayer (id: string, position: any) {
+    movePlayer (id: string, position: Vec) {
         let player = this.getPlayer(id);
         if (!player)
             return;
@@ -245,8 +248,13 @@ export class PongRoom extends Room<PongGame> {
         var options = new Options()
         this.setState(new PongGame(options));
 
-        this.onMessage("move", (client, data) => {
-            this.state.movePlayer(client.sessionId, data);
+        this.onMessage("move", (client, posNorm) => {
+            // Positions from FE come in normalized in [0, 1]
+            // so we de-normalize them by multiplying by game
+            // board dimensions.
+            var pos = new Vec(0, posNorm.y * this.state.board.y);
+            this.state.movePlayer(client.sessionId, pos);
+            // console.log(this.state.player1?.pos.x);
         });
 
         this.onMessage("click", (client, data) => {
