@@ -3,16 +3,17 @@ import express from "express";
 import cors from "cors";
 import { Server } from "colyseus";
 import { monitor } from "@colyseus/monitor";
+import { WebSocketTransport } from "@colyseus/ws-transport";
 import  basicAuth  from "express-basic-auth";
-import * as Eta from "eta"
+import * as Eta from "eta";
 
 import ApplicationRoutes from "./routes";
 import { ChatRoom } from "./ts/GameRooms/ChatRoom";
 import { PongRoom } from './ts/GameRooms/Pong/PongRoom';
 
 // Load environment
-const PORT = Number(process.env.PORT || 2567)
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'password'
+const PORT = Number(process.env.PORT || 2567);
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'password';
 
 // Create express app + middleware
 const app = express();
@@ -21,8 +22,8 @@ app.use(express.json());
 
 // Configure template engine
 app.engine("eta", Eta.renderFile);
-app.set("view engine", "eta")
-app.set("views", "./views")
+app.set("view engine", "eta");
+app.set("views", "./views");
 
 // Add our application to the server
 app.use('/', ApplicationRoutes);
@@ -32,7 +33,9 @@ app.use('/', ApplicationRoutes);
 */
 
 const gameServer = new Server({
-  server: http.createServer(app),
+  transport: new WebSocketTransport({
+    server: http.createServer(app),
+  }),
 });
 
 // Register your Colyseus room handlers
@@ -53,4 +56,7 @@ gameServer.onShutdown(function(){
 // Run the game server async in background
 gameServer.listen(PORT);
 
-console.log(`Listening on http|ws://localhost:${ PORT }` );
+console.log(`Listening on http|ws://localhost:${ PORT }`);
+
+// Eliminates orphaned process issue
+process.on('SIGINT', () => { console.log("Bye bye!"); process.exit(); });
